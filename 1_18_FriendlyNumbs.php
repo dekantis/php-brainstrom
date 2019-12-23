@@ -20,9 +20,8 @@ function sumOfDividers(int $numb): int
 $N = 1;
 $M = 10000;
 for ($i=$N; $i<=$M; $i++) {
-    if (sumOfDividers(sumOfDividers($i)) == $i && sumOfDividers($i)!=$i) {
+    if (sumOfDividers(sumOfDividers($i)) == $i && sumOfDividers($i)>$i) {
         echo $i." ".sumOfDividers($i). "\n";
-        $i = sumOfDividers($i);
     }
 }
 

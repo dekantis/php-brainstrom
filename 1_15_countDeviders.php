@@ -14,10 +14,11 @@ function countDeviders(int $numb): int
     return $numb==1 ? 1 : $count+2;
 }
 
-$N = 4; //целое число
+$N = 0; //целое число
 
-switch ($N) {
-    case 0: echo "∞"; break;
-    case 1: echo 1; break;
-    default: echo  countDeviders($N);
+if ($N == 0) {
+    echo "∞";
+}
+    else {
+        echo  countDeviders($N);
 }

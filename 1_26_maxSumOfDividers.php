@@ -1,4 +1,9 @@
 <?php
+
+/*
+Среди натуральных чисел  n0 ,n1,...,nm найти число с максимальной  суммой делителей.
+*/
+
 /*
 Найти целое число в диапазоне от N до M с наибольшей суммой  делителей.
 */
@@ -7,7 +12,7 @@
 function sumOfDividers(int $numb): int
 {
     $sum = $numb;
-    for ($i=2;$i<=$numb/2;$i++) {//итерации до N/2
+    for ($i=1;$i<=$numb/2;$i++) {//итерации до N/2
         if ($numb % $i == 0) {
             $sum += $i;
         }
@@ -16,11 +21,10 @@ function sumOfDividers(int $numb): int
 }
 
 $numbWithMaxSumOfDividers = 0;
-$N = 5;
-$M = 15;
+$N = 11;
 
 //Поиск числа с наибольшей суммой делителей в диапазоне от N до M
-for ($i = $N; $i <= $M; $i++) {
+for ($i = 1; $i <= $N; $i++) {
     $numbWithMaxSumOfDividers = sumOfDividers($numbWithMaxSumOfDividers)<sumOfDividers($i) ? $i : $numbWithMaxSumOfDividers;
 }
 

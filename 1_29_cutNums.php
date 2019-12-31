@@ -49,16 +49,18 @@ function searchSum(int $numberCL, int $numberOfSum) : int
 }
 
 //Поиск цифры в числе
-function isNumInResultNumber(int $numb, int $Num): int
+function NumInResultNumber(int $numb, int $Num): int
 {
     $result = 0;
     $pow = 0;
     while ($numb>0) {
-       if ($numb % 10 != $Num) {
-           $result = $result + $numb % 10*(10**$pow);
-           $pow++;
+        if ($numb % 10 == $Num) {
+            $result += (int)($numb / 10) * (10**($pow));
+            break;
        }
-       $numb = (int)($numb / 10);
+        $result += ($numb % 10)*(10**$pow);
+        $pow++;
+        $numb = (int)($numb / 10);
     }
     return $result;
 }
@@ -71,10 +73,10 @@ function buildNumb(int $numb, int $numsOfSum) : int
 
 //поиск цифр суммы в числе
     while ($numb>0){
-        if ($numsOfSum>isNumInResultNumber($numsOfSum, (int)($numb%10))){
+        if ($numsOfSum>NumInResultNumber($numsOfSum, (int)($numb%10))){
             $resultNumber += ($numb % 10)*(10**$pow);
-            $numsOfSum = isNumInResultNumber($numsOfSum, (int)($numb%10));
             $pow++;
+            $numsOfSum=NumInResultNumber($numsOfSum, (int)($numb%10));
         }
         $numb = (int)($numb/10);
     }
@@ -82,8 +84,12 @@ function buildNumb(int $numb, int $numsOfSum) : int
     return $resultNumber;
 }
 
-$N = 2342;
+$N = 2226;
 $K = 10;
+
+$ascNum = ascSortNumber($N);
+$searchNumb = searchSum($ascNum,$K);
+
 
 for ($i = 1; $i<=$N; $i++){
     $ascNum = ascSortNumber($i);

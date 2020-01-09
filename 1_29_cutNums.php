@@ -5,24 +5,7 @@ n0 ,n1,...,nm установить,  можно  ли  вычеркнуть  в 
 чтобы сумма оставшихся равнялась заданному числу к.
 */
 
-//Функция сортировки цифр числа в порядке возрастания
-function ascSortNumber(int $naturalNum): int
-{
-    $ascSort = $naturalNum % 10; //Переменная сортировки
-    $naturalNum = $naturalNum/10;
-    $pow = 0; //переменная степени т.к. работаем с разрядностью
-    while ((int)($naturalNum) > 0) {
-        // сравнение последней цифры числа с сортированным числом в разрядности сортированного числа
-        if ($ascSort < ($naturalNum%10) * (10 ** $pow)) {
-            $ascSort = ascSortNumber($ascSort * 10 + $naturalNum % 10);
-        } else {
-            $ascSort = $naturalNum % 10 * (10 ** ($pow+1)) + $ascSort;
-        }
-        $pow++;
-        $naturalNum = $naturalNum / 10;
-    }
-    return $ascSort;
-}
+
 //поиск нужной суммы
 function searchSum(int $numberCL, int $numberOfSum) : int
 {
@@ -66,15 +49,16 @@ function NumInResultNumber(int $numb, int $Num): int
 }
 
 //функция сборки конечного числа
-function buildNumb(int $numb, int $numsOfSum) : int
+function buildNumb(int $numb, int $numsOfSum) : string
 {
     $pow = 0;
-    $resultNumber = 0;
+    $resultNumber = "";
 
 //поиск цифр суммы в числе
     while ($numb>0){
         if ($numsOfSum>NumInResultNumber($numsOfSum, (int)($numb%10))){
-            $resultNumber += ($numb % 10)*(10**$pow);
+            $resultNumber .= ($numb % 10);
+            $resultNumber .= $numsOfSum < 10 ? " = " : " + ";
             $pow++;
             $numsOfSum=NumInResultNumber($numsOfSum, (int)($numb%10));
         }
@@ -85,16 +69,11 @@ function buildNumb(int $numb, int $numsOfSum) : int
 }
 
 $N = 2226;
-$K = 10;
-
-$ascNum = ascSortNumber($N);
-$searchNumb = searchSum($ascNum,$K);
-
+$K = 22;
 
 for ($i = 1; $i<=$N; $i++){
-    $ascNum = ascSortNumber($i);
-    $searchNumb = searchSum($ascNum,$K);
+    $searchNumb = searchSum($i,$K);
     if ($searchNumb>0) {
-        echo "$i ".buildNumb($i, $searchNumb)."\n";
+        echo "$i ".buildNumb($i, $searchNumb)."$K\n";
     }
 }

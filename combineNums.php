@@ -22,18 +22,13 @@ n!/(n - m)!     n - размер множества      m - размер иск
 не должно быть статических методов.
 */
 
-header('Content-Type: text/html; charset=UTF-8');
-
-mb_internal_encoding('UTF-8');
-
-mb_regex_encoding('UTF-8');
 
 class CombineNums
 {
     private $arr = [];
     private $errors = [];
     private $resultStr = "";
-    private $str;
+    public $str;
     private $len;
 
     public function __construct($str, $len)
@@ -80,7 +75,6 @@ class CombineNums
             $this->resultStr .= $mbSymbol;
             if (strlen($this->resultStr) == $this->len) {
                 $this->arr[] = $this->resultStr;
-                $this->resultStr =  mb_ereg_replace($mbSymbol, "", $this->resultStr);
             } else {
                 $this->combine(mb_ereg_replace($mbSymbol, "", $str));
             }
@@ -90,7 +84,7 @@ class CombineNums
 
     private function factorial (int $number) : int
     {
-        return $number > 1 ? $number * $this->factorial($number-1) : 1;
+        return $number > 1 ? $number * $this->factorial($number - 1) : 1;
     }
 
     public function getCalculateCombinations() : int
@@ -102,10 +96,11 @@ class CombineNums
     {
         return $this->arr;
     }
+
 }
 //Входные параметры (строка и длинна подстрок вхождений)
-$str = "абвгде";
-$len = 3;
+$str = "abcde";
+$len = 1;
 
 $combineNums = new CombineNums($str, $len);
 //проверка на ошибки входных параметров
@@ -114,8 +109,8 @@ if ($combineNums->getErrors()) {
     die();
 }
 //Заполнение массива комбинаций подстроками
-$combineNums->combine($str);
+$combineNums->combine($combineNums->str);
 var_dump($combineNums->getArray());
 //сверка с формулой
-echo "Количество размещений без повторений по формуле N!/(N-M)! = " .$combineNums->getCalculateCombinations();
+echo "Количество размещений без повторений по формуле N!/(N-M)! = " . $combineNums->getCalculateCombinations();
 

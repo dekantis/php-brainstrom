@@ -22,24 +22,38 @@ n!/(n - m)!     n - размер множества      m - размер иск
 не должно быть статических методов.
 */
 
+header('Content-Type: text/html; charset=UTF-8');
+
+mb_internal_encoding('UTF-8');
+
+mb_regex_encoding('UTF-8');
 
 class CombineNums
 {
     private $arr = [];
     private $errors = [];
+    private $resultStr = "";
+    private $str;
+    private $len;
 
-    private function setErrors ($str, $len)
+    public function __construct($str, $len)
     {
-        if (empty($str) || empty($len)) {
+        $this->str = $str;
+        $this->len = $len;
+    }
+
+    private function setErrors ()
+    {
+        if (empty($this->str) || empty($this->len)) {
             $this->errors[] = "Не введена строка \$str или длинна \$len подстроки";
         }
-        if (gettype($str) != "string" || strlen($str) < 1) {
+        if (gettype($this->str) != "string" || strlen($this->str) < 1) {
             $this->errors[] = "Неверно введенная строка \$str";
         }
-        if (gettype($len) != "integer" || $len < 1) {
+        if (gettype($this->len) != "integer" || $this->len < 1) {
             $this->errors[] = "Неверно задана длинна подстрок \$len";
         }
-        if (strlen($str) < $len) {
+        if (strlen($this->str) < $this->len) {
             $this->errors[] = "Количство символов в строке \$str не должно быть меньше длинны \$len подстроки";
         }
     }
@@ -51,25 +65,26 @@ class CombineNums
         }
     }
 
-    public function getErrors($str, $len) {
-        $this->setErrors($str, $len);
+    public function getErrors() {
+        $this->setErrors();
         if ($this->errors) {
             return true;
         }
         return false;
     }
 
-    public function combine(string $str, int $len, $resultStr = "")
+    public function combine($str)
     {
         for ($i = 0; $i < strlen($str); $i++) {
-            $resultStr .= $str[$i];
-            if (strlen($resultStr) == $len) {
-                $this->arr[] = $resultStr;
-                $resultStr = str_replace($str[$i], "", $resultStr);
+            $mbSymbol = mb_substr($str, $i,1);
+            $this->resultStr .= $mbSymbol;
+            if (strlen($this->resultStr) == $this->len) {
+                $this->arr[] = $this->resultStr;
+                $this->resultStr =  mb_ereg_replace($mbSymbol, "", $this->resultStr);
             } else {
-                $this->combine(str_replace($str[$i], "", $str), $len, $resultStr);
+                $this->combine(mb_ereg_replace($mbSymbol, "", $str));
             }
-            $resultStr = str_replace($str[$i], "", $resultStr);
+            $this->resultStr = mb_ereg_replace($mbSymbol, "", $this->resultStr);
         }
     }
 
@@ -78,9 +93,9 @@ class CombineNums
         return $number > 1 ? $number * $this->factorial($number-1) : 1;
     }
 
-    public function getCalculateCombinations(string $str, int $len) : int
+    public function getCalculateCombinations() : int
     {
-        return $this->factorial(strlen($str)) / ($this->factorial(strlen($str)-$len));
+        return $this->factorial(strlen($this->str)) / ($this->factorial(strlen($this->str)-$this->len));
     }
 
     public function getArray()
@@ -89,17 +104,18 @@ class CombineNums
     }
 }
 //Входные параметры (строка и длинна подстрок вхождений)
-$str = "asdfgh";
-$len = 5;
+$str = "абвгде";
+$len = 3;
 
-$combineNums = new CombineNums();
+$combineNums = new CombineNums($str, $len);
 //проверка на ошибки входных параметров
-if ($combineNums->getErrors($str, $len)) {
+if ($combineNums->getErrors()) {
     $combineNums->showErrors();
     die();
 }
 //Заполнение массива комбинаций подстроками
-$combineNums->combine($str, $len);
+$combineNums->combine($str);
 var_dump($combineNums->getArray());
 //сверка с формулой
-echo "Количество размещений без повторений по формуле N!/(N-M)! = " .$combineNums->getCalculateCombinations($str, $len);
+echo "Количество размещений без повторений по формуле N!/(N-M)! = " .$combineNums->getCalculateCombinations();
+
